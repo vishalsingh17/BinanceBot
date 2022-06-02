@@ -20,3 +20,25 @@ def index():
     symbols = exchange_info['symbols']
 
     return render_template('index.html', title=title, my_balances=balances, symbols=symbols)
+
+@app.route('/buy', methods=['POST'])
+def buy():
+    print(request.form)
+    try:
+        order = client.create_order(symbol=request.form['symbol'],
+        side=SIDE_BUY,
+        type=ORDER_TYPE_MARKET,
+        quantity=request.form['quantity'])
+    except Exception as e:
+        flash(e.message, "error")
+
+    return redirect('/')
+
+@app.route('/sell')
+def sell():
+    return 'sell'
+
+@app.route('/settings')
+def settings():
+    return 'settings'
+
