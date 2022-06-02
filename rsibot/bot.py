@@ -46,3 +46,15 @@ def on_message(ws, message):
 
     if is_candle_closed:
         print("candle closed at {}".format(close))
+        closes.append(float(close))
+        print("closes")
+
+        if len(closes) > EMA_PERIOD20:
+            np_closes = numpy.array(closes)
+            ema5 = talib.EMA(np_closes, EMA_PERIOD5)
+            ema20 = talib.EMA(np_closes, EMA_PERIOD20)
+            print("all ema's calculated so far")
+            print(ema5,ema20)
+            last_ema= ema20[-1]
+            print("the current 20 period ema is {}".format(ema20))
+            cross=bt.ind.CrossOver(ema5,ema20)
