@@ -58,3 +58,27 @@ def on_message(ws, message):
             last_ema= ema20[-1]
             print("the current 20 period ema is {}".format(ema20))
             cross=bt.ind.CrossOver(ema5,ema20)
+
+        if cross < 0:
+            if in_position:
+                print("Sell!!")
+                # put binance sell logic here
+                order_succeeded = order(SIDE_SELL, TRADE_QUANTITY, TRADE_SYMBOL)
+                if order_succeeded:
+                    in_position = False
+                else:
+                    print("It is overbought, but we don't own any. Nothing to do.")
+
+        if cross>0:
+                if in_position:
+                    print("It is oversold, but you already own it, nothing to do.")
+                else:
+                    print("Buy!!")
+                    # put binance buy order logic here
+                    order_succeeded = order(SIDE_BUY, TRADE_QUANTITY, TRADE_SYMBOL)
+                    if order_succeeded:
+                        in_position = True
+
+
+ws = websocket.WebSocketApp(SOCKET, on_open=on_open, on_close=on_close, on_message=on_message)
+ws.run_forever()
