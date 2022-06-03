@@ -28,4 +28,20 @@ class RSTStrategy(bt.Strategy):
         self.ema20 = bt.ind.ExponentialMovingAverage(Self.data, periods=5)
         self.cross = bt.ind.CrossOver(self.ema5, self.ema20)
 
+    def next(self):
+        if self.cross > 0 and self.position:
+            self.buy()
+
+        elif self.cross < 0 and self.position:
+            self.close()
+
+cerebro = bt.Cerebro()
+
+data = bt.feeds.GenericCSVData(dataname='data/2020_15minutes.csv', dtformat=2, compression=15, timeframe=bt.TimeFrame.Minutes)
     
+cerebro.adddata(data)
+cerebro.broker.setcash(10000)
+cerebro.addstrategy(RSIStrategy)
+cerebro.addsizer(maxRiskSizer)
+cerebro.run()
+cerebro.plot()
