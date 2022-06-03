@@ -1,0 +1,4 @@
+import os
+
+API_KEY_BINANCE  = os.environ['API_SECRET_BINANCE']
+API_SECRET_BINANCE = os.environ['API_KEY_BINANCE']
